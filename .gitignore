@@ -1,0 +1,9 @@
+*.pyc
+tags*
+
+inputs/
+oofs/
+share/
+submissions/
+trained_models/
+log/
