@@ -1,0 +1,29 @@
+# lightGBM parameters
+lgbm_params:
+    verbose: -1
+    random_state: 71
+    objective: binary
+    metric: auc
+    learning_rate: 
+    num_leaves: 60
+    max_depth: -1
+    subsample: 0.8
+    colsample_bytree: 0.8 
+    bagging_freq: 0.8
+    #    reg_alpha: 
+    #    reg_lambda: 
+    #    min_split_gain: 
+    #    min_child_weight: 
+    #    max_bin: 
+
+# training settings
+train:
+    fold_num: 5
+
+# features
+features: 
+    - e001_base_max
+    - e001_base_min
+    - e001_base_std
+
+
