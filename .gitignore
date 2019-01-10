@@ -6,4 +6,6 @@ oofs/
 share/
 submissions/
 trained_models/
-log/
+logs/
+importances/
+notebooks/.ipynb_checkpoints/
