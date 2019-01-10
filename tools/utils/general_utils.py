@@ -41,9 +41,19 @@ def parse_args(logger=None):
                         help='set when you run test',
                         action='store_true',
                         default=False)
+    parser.add_argument('-c', '--use_cached_features',
+                        help='set when you use cached features',
+                        action='store_true',
+                        default=False)
+    parser.add_argument('-g', '--gen_cached_features',
+                        help='set when you generate cached features',
+                        action='store_true',
+                        default=False)
 
     args = parser.parse_args()
     sel_log(f'args: {sorted(vars(args).items())}', logger)
+    assert not (args.use_cached_features and args.gen_cached_features), \
+        'U can not use use and generate chached features simultaneously !'
     return args
 
 
@@ -143,5 +153,3 @@ def dec_timer(func):
         return res
 
     return _timer
-
-# the weigthting animation does not necessarily be logged (such as tqdm)

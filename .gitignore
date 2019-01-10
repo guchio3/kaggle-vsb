@@ -7,4 +7,5 @@ share/
 submissions/
 trained_models/
 logs/
+importances/
 notebooks/.ipynb_checkpoints/

@@ -20,8 +20,9 @@ def mk_features(args, logger):
 if __name__ == '__main__':
     logger = getLogger(__name__)
     logger = logInit(logger, './logs/', 'mk_features.log')
-    logger.info('')
-    logger.info('')
-    logger.info('============ START MAKING FEATURES =============')
     args = parse_args(logger)
+
+    logger.info('')
+    logger.info('')
+    logger.info(f'============ EXP {args.exp_ids}, START MAKING FEATURES =============')
     mk_features(args, logger)

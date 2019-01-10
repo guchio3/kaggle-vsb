@@ -4,12 +4,12 @@ lgbm_params:
     random_state: 71
     objective: binary
     metric: auc
-    learning_rate: 
+    learning_rate: 0.01
     num_leaves: 60
     max_depth: -1
     subsample: 0.8
     colsample_bytree: 0.8 
-    bagging_freq: 0.8
+    bagging_freq: 1
     #    reg_alpha: 
     #    reg_lambda: 
     #    min_split_gain: 
@@ -25,5 +25,3 @@ features:
     - e001_base_max
     - e001_base_min
     - e001_base_std
-
-
