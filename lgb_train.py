@@ -49,7 +49,7 @@ def train(args, logger):
     configs = load_configs('./config.yml', logger)
 
     # -- Load train data
-    sel_log('loading data ...', None)
+    sel_log('loading training data ...', None)
     target = pd.read_pickle(
             train_base_dir + 'target.pkl.gz', compression='gzip')
     id_measurement = pd.read_pickle(
@@ -141,9 +141,35 @@ def train(args, logger):
             './trained_models/' + filename_base + '_models.pkl', 'wb') as fout:
         pickle.dump(cv_model, fout)
 
+
     # --- Make submission file
     if args.test:
-        print('Not implemented !')
+        # -- Prepare for test
+        test_base_dir = './inputs/test/'
+
+        sel_log('loading test data ...', None)
+        test_features_df = load_features(
+                configs['features'], test_base_dir, logger)
+
+        # -- Prediction
+        sel_log('predicting ...', None)
+        preds = []
+        for booster in tqdm(cv_model.boosters[i]):
+            preds.append(booster.predict(test_features_df.values))
+
+        # -- Make submission file
+        sub_values = np.mean(preds, axis=1)
+        target_values = sub_values > best_thresh
+
+        sel_log(f'loading sample submission file ...', None)
+        sub_df = pd.read_csv('./inputs/origin/sample_submission.csv')
+        sub_df.target = target_values
+
+        submission_filename = f'./submissions/{filename_base}_sub.csv'
+        sel_log(f'saving submission file to {submission_filename}', logger)
+        sub_df.to_csv(submission_filename, compression='gzip')
+
+    # -- Post processing
 
 
 if __name__ == '__main__':
