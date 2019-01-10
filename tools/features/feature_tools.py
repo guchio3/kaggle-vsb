@@ -5,11 +5,11 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from general_utils import sel_log
+sys.path.append('../utils/')
+from general_utils import sel_log, dec_timer
 
-sys.path.append('../tools/')
 
-
+@dec_timer
 def split_df(base_df, target_df, split_name,
              target_name, nthread, logger=None):
     '''
@@ -33,6 +33,7 @@ def split_df(base_df, target_df, split_name,
     return dfs
 
 
+@dec_timer
 def load_features(features, base_dir, logger=None):
     loaded_features = []
     for feature in tqdm(features):
@@ -45,6 +46,7 @@ def load_features(features, base_dir, logger=None):
     return features_df
 
 
+@dec_timer
 def save_features(features_df, base_dir, logger=None):
     for feature in tqdm(features_df.columns):
         save_filename = base_dir + feature + '.pkl.gz'
