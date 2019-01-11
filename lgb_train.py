@@ -16,7 +16,7 @@ from general_utils import parse_args, load_configs, \
         logInit, sel_log, log_evaluation, dec_timer
 from metrics import calc_MCC, calc_best_MCC, lgb_MCC
 from visualizations import save_importance
-from samplings import get_neg_ds_index
+from samplings import resampling
 
 sys.path.append('./tools/features')
 from feature_tools import load_features
@@ -72,13 +72,12 @@ def train(args, logger):
                 './inputs/train/cached_featurse.pkl.gz', compression='gzip')
 
     # -- Data resampling
-    if configs['preprocess']['down_sampling']:
-        sel_log('now resampling ...', None)
-        resampled_index = get_neg_ds_index(target,
+    if configs['preprocess']['resampling']:
+        target, id_measurement, features_df = resampling(
+                target, id_measurement, features_df,
+                configs['preprocess']['resampling_type'],
                 configs['preprocess']['resampling_seed'])
-        target = target.loc[resampled_index]
-        id_measurement = id_measurement.loc[resampled_index]
-        features_df = features_df.loc[resampled_index]
+    sel_log(f'the shape features_df is {features_df.shape}', logger)
 
     # -- Split using group k-fold w/ shuffling
     gss = GroupShuffleSplit(configs['train']['fold_num'], random_state=71)

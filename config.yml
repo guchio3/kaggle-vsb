@@ -1,6 +1,7 @@
 # preprocess settings
 preprocess:
-    down_sampling: True
+    resampling: True
+    resampling_type: over
     resampling_seed: 71
 
 # training settings
