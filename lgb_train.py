@@ -1,6 +1,7 @@
 import sys
 import datetime
 import pickle
+import warnings
 from itertools import tee
 from tqdm import tqdm
 from logging import getLogger
@@ -21,6 +22,9 @@ from feature_tools import load_features
 
 sys.path.append('../guchio_utils')
 import my_lightgbm as mlgb
+
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 @dec_timer
