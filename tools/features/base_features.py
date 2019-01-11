@@ -12,12 +12,11 @@ from general_utils import dec_timer, sel_log
 
 
 def e001_basic(df, exp_ids):
-    if 'e001' in exp_ids:
-        features = pd.DataFrame()
-        features['max'] = df.max(axis=0)
-        features['min'] = df.min(axis=0)
-        features['std'] = df.std(axis=0)
-        features = features.add_prefix('e001_base_').reset_index(drop=True)
+    features = pd.DataFrame()
+    features['max'] = df.max(axis=0)
+    features['min'] = df.min(axis=0)
+    features['std'] = df.std(axis=0)
+    features = features.add_prefix('e001_base_').reset_index(drop=True)
     return features
 
 
@@ -26,7 +25,8 @@ def _base_features(df, exp_ids):
     _features.append(pd.DataFrame(df.columns,
                                   columns=['signal_id'],
                                   dtype=int))
-    _features.append(e001_basic(df, exp_ids))
+    if 'e001' in exp_ids:
+        _features.append(e001_basic(df, exp_ids))
     features = pd.concat(_features, axis=1)
     return features
 
