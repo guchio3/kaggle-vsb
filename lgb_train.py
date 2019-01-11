@@ -80,6 +80,7 @@ def train(args, logger):
     sel_log(f'the shape features_df is {features_df.shape}', logger)
 
     # -- Split using group k-fold w/ shuffling
+    # NOTE: this is not stratified, I wanna implement it in the future
     gss = GroupShuffleSplit(configs['train']['fold_num'], random_state=71)
     folds = gss.split(features_df, target, groups=id_measurement)
     folds, pred_folds = tee(folds)
@@ -195,5 +196,5 @@ if __name__ == '__main__':
 
     logger.info('')
     logger.info('')
-    logger.info(f'============ EXP {args.exp_ids}, START TRAINING =============')
+    logger.info(f'============ EXP {args.exp_ids[0]}-{args.sub_id[0]}, START TRAINING =============')
     train(args, logger)

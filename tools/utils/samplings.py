@@ -3,9 +3,9 @@ import pandas as pd
 from general_utils import sel_log
 
 
-def get_neg_ds_index(target, random_state=None):
+def get_neg_us_index(target, random_state=None):
     '''
-    get negative donwnsamling index.
+    get negative undersamling index.
 
     '''
     res_index = target[target == 1].index
@@ -32,9 +32,9 @@ def get_pos_os_index(target, random_state=None):
 
 def resampling(target, id_measurement, features_df,
                resampling_type, random_state, logger):
-    if resampling_type == 'down':
-        sel_log('now down sampling ...', None)
-        resampled_index = get_neg_ds_index(target, random_state)
+    if resampling_type == 'under':
+        sel_log('now under sampling ...', None)
+        resampled_index = get_neg_us_index(target, random_state)
         target = target.loc[resampled_index]
         id_measurement = id_measurement.loc[resampled_index]
         features_df = features_df.loc[resampled_index]
@@ -44,13 +44,7 @@ def resampling(target, id_measurement, features_df,
         target = target.loc[resampled_index]
         id_measurement = id_measurement.loc[resampled_index]
         features_df = features_df.loc[resampled_index]
-    elif resampling_type == 'smote':
-        sel_log('now running smote ...', None)
-        resampled_index = get_pos_os_index(target, random_state)
-        target = target.loc[resampled_index]
-        id_measurement = id_measurement.loc[resampled_index]
-        features_df = features_df.loc[resampled_index]
     else:
         sel_log(f'ERROR: wrong resampling type ({resampling_type})', logger)
-        sel_log('plz specify "down", "over", or "smote".', logger)
+        sel_log('plz specify "under" or "over".', logger)
     return target, id_measurement, features_df

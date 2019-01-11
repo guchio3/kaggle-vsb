@@ -24,5 +24,5 @@ if __name__ == '__main__':
 
     logger.info('')
     logger.info('')
-    logger.info(f'============ EXP {args.exp_ids}, START MAKING FEATURES =============')
+    logger.info(f'============ EXP {args.exp_ids[0]}-{args.sub_id[0]}, START MAKING FEATURES =============')
     mk_features(args, logger)
