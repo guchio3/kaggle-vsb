@@ -15,7 +15,7 @@ sys.path.append('./tools/utils')
 from general_utils import parse_args, load_configs, \
         logInit, sel_log, log_evaluation, dec_timer
 from metrics import calc_MCC, calc_best_MCC, lgb_MCC
-from visualization import save_importance
+from visualizations import save_importance
 from samplings import get_neg_ds_index
 
 sys.path.append('./tools/features')
@@ -72,8 +72,8 @@ def train(args, logger):
                 './inputs/train/cached_featurse.pkl.gz', compression='gzip')
 
     # -- Data resampling
-    sel_log('now resampling ...', None)
     if configs['preprocess']['down_sampling']:
+        sel_log('now resampling ...', None)
         resampled_index = get_neg_ds_index(target,
                 configs['preprocess']['resampling_seed'])
         target = target.loc[resampled_index]
