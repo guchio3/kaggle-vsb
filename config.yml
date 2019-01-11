@@ -1,3 +1,12 @@
+# preprocess settings
+preprocess:
+    down_sampling: True
+    resampling_seed: 71
+
+# training settings
+train:
+    fold_num: 5
+
 # lightGBM parameters
 lgbm_params:
     verbose: -1
@@ -15,10 +24,6 @@ lgbm_params:
     #    min_split_gain: 
     #    min_child_weight: 
     #    max_bin: 
-
-# training settings
-train:
-    fold_num: 5
 
 # features
 features: 

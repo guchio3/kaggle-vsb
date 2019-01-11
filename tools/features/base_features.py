@@ -76,7 +76,7 @@ def mk_base_features(nthread, exp_ids, test=False, series_df=None,
     features_df = meta_df.merge(features_df, on='signal_id', how='left')
 
     # Save the features
-    sel_log(f'saving features ...', None)
+    sel_log(f'saving features ...', logger)
     save_features(features_df, base_dir, logger)
 
     return series_df, meta_df
