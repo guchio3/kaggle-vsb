@@ -38,7 +38,7 @@ def load_features(features, base_dir, logger=None):
     loaded_features = []
     for feature in tqdm(features):
         load_filename = base_dir + feature + '.pkl.gz'
-        sel_log(f'now loading {feature}', logger)
+        sel_log(f'now loading {feature}', None)
         loaded_feature = pd.read_pickle(load_filename, compression='gzip')
         loaded_features.append(loaded_feature)
 

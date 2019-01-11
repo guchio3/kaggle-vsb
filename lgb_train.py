@@ -76,7 +76,7 @@ def train(args, logger):
         target, id_measurement, features_df = resampling(
                 target, id_measurement, features_df,
                 configs['preprocess']['resampling_type'],
-                configs['preprocess']['resampling_seed'])
+                configs['preprocess']['resampling_seed'], logger)
     sel_log(f'the shape features_df is {features_df.shape}', logger)
 
     # -- Split using group k-fold w/ shuffling
@@ -196,5 +196,5 @@ if __name__ == '__main__':
 
     logger.info('')
     logger.info('')
-    logger.info(f'============ EXP {args.exp_ids[0]}-{args.sub_id[0]}, START TRAINING =============')
+    logger.info(f'============ EXP {args.exp_ids[0]}-{args.sub_id}, START TRAINING =============')
     train(args, logger)

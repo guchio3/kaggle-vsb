@@ -5,7 +5,9 @@ from general_utils import sel_log
 
 def get_neg_us_index(target, random_state=None):
     '''
-    get negative undersamling index.
+    Get negative undersamling index.
+
+    Positive and negative is not important here, so it can be more generalized.
 
     '''
     res_index = target[target == 1].index
@@ -16,7 +18,9 @@ def get_neg_us_index(target, random_state=None):
 
 def get_pos_os_index(target, random_state=None):
     '''
-    get positive oversamling index.
+    Get positive oversamling index.
+
+    Positive and negative is not important here, so it can be more generalized.
 
     '''
     pos_size = target[target == 1].count()
