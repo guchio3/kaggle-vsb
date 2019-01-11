@@ -27,6 +27,7 @@ lgbm_params:
 
 # features
 features: 
+    - phase
     - e001_base_max
     - e001_base_min
     - e001_base_std

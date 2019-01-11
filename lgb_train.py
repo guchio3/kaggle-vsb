@@ -173,18 +173,20 @@ def train(args, logger):
 
         # -- Make submission file
         sub_values = np.mean(preds, axis=0)
-        target_values = (sub_values > best_thresh)
-        # target_values = (sub_values > best_thresh).astype(np.int32)
+        target_values = (sub_values > best_thresh).astype(np.int32)
 
         sel_log(f'loading sample submission file ...', None)
         sub_df = pd.read_csv('./inputs/origin/sample_submission.csv')
         sub_df.target = target_values
 
+        # print stats
+        sel_log(f'prositive percentage: \
+                {sub_df.target.sum()/sub_df.target.count()*100:.3}%',
+                logger=logger)
+
         submission_filename = f'./submissions/{filename_base}_sub.csv.gz'
         sel_log(f'saving submission file to {submission_filename}', logger)
         sub_df.to_csv(submission_filename, compression='gzip', index=False)
-
-    # -- Post processing
 
 
 if __name__ == '__main__':
