@@ -72,6 +72,7 @@ def train(args, logger):
                 './inputs/train/cached_featurse.pkl.gz', compression='gzip')
 
     # -- Data resampling
+    # Stock original data for validation
     if configs['preprocess']['resampling']:
         target, id_measurement, features_df = resampling(
                 target, id_measurement, features_df,
