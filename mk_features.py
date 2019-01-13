@@ -6,14 +6,18 @@ sys.path.append('./tools/utils/')
 from general_utils import parse_args, logInit, sel_log, dec_timer
 
 sys.path.append('./tools/features/')
-from base_features import mk_base_features
+from base_features import _base_features, _load_base_features_src
+from feature_tools import _mk_features
 
 
 @dec_timer
 def mk_features(args, logger):
-    # series_df, meta_df = mk_base_features(
-    series_df, meta_df = mk_base_features(
-            args.nthread, args.exp_ids, args.test, logger=logger)
+    series_df, meta_df = None, None
+    # base features
+    series_df, meta_df = _mk_features(
+            _load_base_features_src, _base_features,
+            args.nthread, args.exp_ids, args.test,
+            series_df, meta_df, logger=logger)
     gc.collect()
 
 

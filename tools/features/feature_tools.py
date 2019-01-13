@@ -1,12 +1,14 @@
 import os
 import sys
+from functools import partial
+from multiprocessing import Pool
 
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
 sys.path.append('../utils/')
-from general_utils import sel_log, dec_timer
+from general_utils import dec_timer, sel_log
 
 
 @dec_timer
@@ -55,3 +57,48 @@ def save_features(features_df, base_dir, logger=None):
         else:
             sel_log(f'saving to {save_filename} ...', logger)
             features_df[feature].to_pickle(save_filename, compression='gzip')
+
+
+@dec_timer
+def _mk_features(load_func, feature_func, nthread, exp_ids, test=False,
+                 series_df=None, meta_df=None, logger=None):
+    # Load dfs
+    # Does not load if the exp_ids are not the targets.
+    series_df, meta_df = load_func(exp_ids, test, series_df, meta_df, logger)
+    # Finish before feature engineering if the exp_ids are not the targets.
+    if series_df is None:
+        return None, None
+
+    # Test is only 20338, so i use splitting only for series.
+    series_dfs = split_df(
+        meta_df,
+        series_df,
+        'id_measurement',
+        'signal_id',
+        nthread,
+        logger=logger)
+
+    with Pool(nthread) as p:
+        sel_log(f'feature engineering ...', None)
+        # Using partial enable to use constant argument for the iteration.
+        iter_func = partial(feature_func, exp_ids=exp_ids)
+        features_list = p.map(iter_func, series_dfs)
+        p.close()
+        p.join()
+        features_df = pd.concat(features_list, axis=0)
+
+    # Merge w/ meta.
+    # This time, i don't remove the original features because
+    #   this is the base feature function.
+    sel_log(f'merging features ...', None)
+    features_df = meta_df.merge(features_df, on='signal_id', how='left')
+
+    # Save the features
+    if test:
+        base_dir = './inputs/test/'
+    else:
+        base_dir = './inputs/train/'
+    sel_log(f'saving features ...', logger)
+    save_features(features_df, base_dir, logger)
+
+    return series_df, meta_df
