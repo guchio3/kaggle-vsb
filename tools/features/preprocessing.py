@@ -5,9 +5,31 @@ import scipy
 from scipy import signal
 from scipy.signal import butter
 from statsmodels.robust import mad
+from tqdm import tqdm
 
 # ==========================================
-#  tools for signal preprocessing
+#  util tools for preprocessing
+# ==========================================
+
+
+def decode_signals_after_pool(pooled_signals):
+    signal_ids, signals = [], []
+    for pooled_signal in tqdm(pooled_signals):
+        signal_ids.append(pooled_signal[0])
+        signals.append(pooled_signal[1])
+    # using np array for decoding is verrrrry faster
+    decoded_signals_df = pd.DataFrame(np.array(signals)).T
+    # the column should be int for sorting
+    signal_ids = pd.Series(signal_ids).astype(int)
+    decoded_signals_df.columns = signal_ids
+    decoded_signals_df.sort_index(axis=1, ascending=True, inplace=True)
+    # change col type to str
+    decoded_signals_df.columns = signal_ids.astype(str)
+    return decoded_signals_df
+
+
+# ==========================================
+#  tools for signal conversion
 # ==========================================
 # Signal characteristics
 # From @randxie
@@ -15,13 +37,15 @@ from statsmodels.robust import mad
 SAMPLING_FREQ = 80000 / 0.02  # 80,000 data points taken over 20 ms
 
 
-def add_high_pass_filter(x, low_freq=1000, sample_fs=SAMPLING_FREQ):
+def add_high_pass_filter(id_signal_pair, low_freq=1000,
+                         sample_fs=SAMPLING_FREQ):
     """
     From @randxie https://github.com/randxie/Kaggle-VSB-Baseline/
         blob/master/src/utils/util_signal.py
     Modified to work with scipy version 1.1.0
         which does not have the fs parameter
     """
+    signal_id, x = id_signal_pair
 
     cutoff = 1000
     nyq = 0.5 * sample_fs
@@ -36,10 +60,10 @@ def add_high_pass_filter(x, low_freq=1000, sample_fs=SAMPLING_FREQ):
     sos = butter(10, normal_cutoff, btype='hp', output='sos')
     filtered_sig = signal.sosfilt(sos, x)
 
-    return filtered_sig
+    return signal_id, filtered_sig
 
 
-def denoise_signal(x, wavelet='db4', level=1):
+def denoise_signal(id_signal_pair, wavelet='db4', level=1):
     """
     1. Adapted from waveletSmooth function found here:
     http://connor-johnson.com/2016/01/24/using-pywavelets-to-remove-high-frequency-noise/
@@ -47,6 +71,7 @@ def denoise_signal(x, wavelet='db4', level=1):
     in section '3.2 denoising based on optimized singular values' from paper:
     http://dspace.vsb.cz/bitstream/handle/10084/133114/VAN431_FEI_P1807_1801V001_2018.pdf
     """
+    signal_id, x = id_signal_pair
 
     # Decompose to get the wavelet coefficients
     coeff = pywt.wavedec(x, wavelet, mode="per")

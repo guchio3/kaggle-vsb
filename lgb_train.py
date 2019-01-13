@@ -1,29 +1,22 @@
-import sys
 import datetime
 import pickle
+import sys
 import warnings
 from itertools import tee
-from tqdm import tqdm
 from logging import getLogger
 
 import numpy as np
 import pandas as pd
-
 from sklearn.model_selection import GroupShuffleSplit
+from tqdm import tqdm
 
-sys.path.append('./tools/utils')
-from general_utils import parse_args, load_configs, \
-        logInit, sel_log, log_evaluation, dec_timer
-from metrics import calc_MCC, calc_best_MCC, lgb_MCC
-from visualizations import save_importance
-from samplings import resampling
-
-sys.path.append('./tools/features')
-from feature_tools import load_features
-
-sys.path.append('../guchio_utils')
-import my_lightgbm as mlgb
-
+import tools.models.my_lightgbm as mlgb
+from tools.features.feature_tools import load_features
+from tools.utils.general_utils import (dec_timer, load_configs, log_evaluation,
+                                       logInit, parse_args, sel_log)
+from tools.utils.metrics import calc_best_MCC, calc_MCC, lgb_MCC
+from tools.utils.samplings import resampling
+from tools.utils.visualizations import save_importance
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -56,16 +49,16 @@ def train(args, logger):
     # -- Load train data
     sel_log('loading training data ...', None)
     target = pd.read_pickle(
-            train_base_dir + 'target.pkl.gz', compression='gzip')
+        train_base_dir + 'target.pkl.gz', compression='gzip')
     id_measurement = pd.read_pickle(
-            train_base_dir + 'id_measurement.pkl.gz', compression='gzip')
+        train_base_dir + 'id_measurement.pkl.gz', compression='gzip')
     # Cache can be used only in train
     if args.use_cached_features:
         features_df = pd.read_pickle(
-                './inputs/train/cached_featurse.pkl.gz', compression='gzip')
+            './inputs/train/cached_featurse.pkl.gz', compression='gzip')
     else:
         features_df = load_features(
-                configs['features'], train_base_dir, logger)
+            configs['features'], train_base_dir, logger)
         # gen cache file if specified for the next time
         if args.gen_cached_features:
             features_df.to_pickle(
@@ -75,9 +68,9 @@ def train(args, logger):
     # Stock original data for validation
     if configs['preprocess']['resampling']:
         target, id_measurement, features_df = resampling(
-                target, id_measurement, features_df,
-                configs['preprocess']['resampling_type'],
-                configs['preprocess']['resampling_seed'], logger)
+            target, id_measurement, features_df,
+            configs['preprocess']['resampling_type'],
+            configs['preprocess']['resampling_seed'], logger)
     sel_log(f'the shape features_df is {features_df.shape}', logger)
 
     # -- Split using group k-fold w/ shuffling
@@ -96,14 +89,14 @@ def train(args, logger):
 
     sel_log('start training ...', None)
     hist, cv_model = mlgb.cv(
-                        params=PARAMS,
-                        folds=folds,
-                        train_set=train_set,
-                        verbose_eval=50,
-                        early_stopping_rounds=100,
-                        feval=lgb_MCC,
-                        callbacks=[log_evaluation(logger, period=50)],
-                     )
+        params=PARAMS,
+        folds=folds,
+        train_set=train_set,
+        verbose_eval=50,
+        early_stopping_rounds=100,
+        feval=lgb_MCC,
+        callbacks=[log_evaluation(logger, period=50)],
+    )
 
     # -- Prediction
     sel_log('predicting ...', logger)
@@ -156,7 +149,6 @@ def train(args, logger):
             './trained_models/' + filename_base + '_models.pkl', 'wb') as fout:
         pickle.dump(cv_model, fout)
 
-
     # --- Make submission file
     if args.test:
         # -- Prepare for test
@@ -164,7 +156,7 @@ def train(args, logger):
 
         sel_log('loading test data ...', None)
         test_features_df = load_features(
-                configs['features'], test_base_dir, logger)
+            configs['features'], test_base_dir, logger)
 
         # -- Prediction
         sel_log('predicting ...', None)
@@ -197,5 +189,6 @@ if __name__ == '__main__':
 
     logger.info('')
     logger.info('')
-    logger.info(f'============ EXP {args.exp_ids[0]}-{args.sub_id}, START TRAINING =============')
+    logger.info(
+        f'============ EXP {args.exp_ids[0]}-{args.sub_id}, START TRAINING =============')
     train(args, logger)

@@ -1,6 +1,6 @@
 import pandas as pd
 
-from general_utils import sel_log
+from ..utils.general_utils import sel_log
 
 
 def get_neg_us_index(target, random_state=None):

@@ -1,5 +1,4 @@
 import os
-import sys
 from functools import partial
 from multiprocessing import Pool
 
@@ -7,8 +6,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-sys.path.append('../utils/')
-from general_utils import dec_timer, sel_log
+from ..utils.general_utils import dec_timer, sel_log
 
 
 @dec_timer

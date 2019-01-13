@@ -1,11 +1,8 @@
-import sys
-
 import pandas as pd
+
 import pyarrow.parquet as pq
 
-sys.path.append('../utils/')
-from feature_tools import save_features, split_df
-from general_utils import dec_timer, sel_log
+from ..utils.general_utils import dec_timer, sel_log
 
 
 def e001_basic(df, exp_ids):
