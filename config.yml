@@ -1,27 +1,43 @@
+# preprocess settings
+preprocess:
+    resampling: True
+    resampling_type: over
+    resampling_seed: 71
+
+# training settings
+train:
+    fold_num: 5
+
 # lightGBM parameters
 lgbm_params:
     verbose: -1
     random_state: 71
     objective: binary
     metric: auc
-    learning_rate: 0.01
-    num_leaves: 60
+    learning_rate: 0.05
+    num_leaves: 25
     max_depth: -1
     subsample: 0.8
-    colsample_bytree: 0.8 
     bagging_freq: 1
+    colsample_bytree: 0.8
+    feature_fraction: 0.8
     #    reg_alpha: 
     #    reg_lambda: 
     #    min_split_gain: 
     #    min_child_weight: 
     #    max_bin: 
 
-# training settings
-train:
-    fold_num: 5
-
 # features
 features: 
+    - phase
     - e001_base_max
     - e001_base_min
     - e001_base_std
+    - e002_hp_dn_basic_max
+    - e002_hp_dn_basic_min
+    - e002_hp_dn_basic_std
+    - e002_hp_dn_basic_mean
+    - e002_hp_basic_max
+    - e002_hp_basic_min
+    - e002_hp_basic_std
+    - e002_hp_basic_mean

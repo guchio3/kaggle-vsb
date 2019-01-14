@@ -1,19 +1,37 @@
-import sys
 import gc
+import sys
 from logging import getLogger
 
-sys.path.append('./tools/utils/')
-from general_utils import parse_args, logInit, sel_log, dec_timer
-
-sys.path.append('./tools/features/')
-from base_features import mk_base_features
+from tools.features.base_features import (_base_features,
+                                          _load_base_features_src)
+from tools.features.feature_tools import _mk_features
+from tools.features.hp_dn_features import (_hp_dn_basic_features,
+                                           _load_hp_dn_features_src)
+from tools.features.hp_features import (_hp_basic_features,
+                                        _load_hp_features_src)
+from tools.utils.general_utils import (dec_timer, logInit, parse_args,
+                                       send_line_notification)
 
 
 @dec_timer
 def mk_features(args, logger):
-    # series_df, meta_df = mk_base_features(
-    series_df, meta_df = mk_base_features(
-            args.nthread, args.exp_ids, args.test, logger=logger)
+    meta_df = None
+    series_df = None
+    hp_series_df = None
+    hp_dn_series_df = None
+    # base features
+    series_df, meta_df = _mk_features(
+        _load_base_features_src, _base_features,
+        args.nthread, args.exp_ids, args.test,
+        series_df, meta_df, logger=logger)
+    hp_series_df, meta_df = _mk_features(
+        _load_hp_features_src, _hp_basic_features,
+        args.nthread, args.exp_ids, args.test,
+        hp_series_df, meta_df, logger=logger)
+    hp_dn_series_df, meta_df = _mk_features(
+        _load_hp_dn_features_src, _hp_dn_basic_features,
+        args.nthread, args.exp_ids, args.test,
+        hp_dn_series_df, meta_df, logger=logger)
     gc.collect()
 
 
@@ -24,5 +42,7 @@ if __name__ == '__main__':
 
     logger.info('')
     logger.info('')
-    logger.info(f'============ EXP {args.exp_ids}, START MAKING FEATURES =============')
+    logger.info(
+        f'============ EXP {args.exp_ids[0]}-{args.sub_id}, START MAKING FEATURES =============')
     mk_features(args, logger)
+    send_line_notification(f'Finished: {" ".join(sys.argv)}')
