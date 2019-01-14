@@ -7,6 +7,9 @@ from scipy.signal import butter
 from statsmodels.robust import mad
 from tqdm import tqdm
 
+from ..utils.general_utils import send_line_notification
+
+
 # ==========================================
 #  util tools for preprocessing
 # ==========================================
@@ -20,11 +23,11 @@ def decode_signals_after_pool(pooled_signals):
     # using np array for decoding is verrrrry faster
     decoded_signals_df = pd.DataFrame(np.array(signals).astype('float16')).T
     # the column should be int for sorting
-    signal_ids = pd.Series(signal_ids).astype('int8')
+    signal_ids = pd.Series(signal_ids).astype('int16')
     decoded_signals_df.columns = signal_ids
     decoded_signals_df.sort_index(axis=1, ascending=True, inplace=True)
     # change col type to str
-    decoded_signals_df.columns = signal_ids.astype(str)
+    decoded_signals_df.columns = decoded_signals_df.columns.astype(str)
     return decoded_signals_df
 
 

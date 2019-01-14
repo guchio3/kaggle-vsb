@@ -32,3 +32,7 @@ features:
     - e001_base_max
     - e001_base_min
     - e001_base_std
+    - e002_hp_dn_basic_max
+    - e002_hp_dn_basic_min
+    - e002_hp_dn_basic_std
+      #    - e002_hp_dn_basic_mean

@@ -13,7 +13,8 @@ from tqdm import tqdm
 import tools.models.my_lightgbm as mlgb
 from tools.features.feature_tools import load_features
 from tools.utils.general_utils import (dec_timer, load_configs, log_evaluation,
-                                       logInit, parse_args, sel_log)
+                                       logInit, parse_args, sel_log,
+                                       send_line_notification)
 from tools.utils.metrics import calc_best_MCC, calc_MCC, lgb_MCC
 from tools.utils.samplings import resampling
 from tools.utils.visualizations import save_importance
@@ -192,3 +193,4 @@ if __name__ == '__main__':
     logger.info(
         f'============ EXP {args.exp_ids[0]}-{args.sub_id}, START TRAINING =============')
     train(args, logger)
+    send_line_notification(f'Finished: {" ".join(sys.argv)}')
