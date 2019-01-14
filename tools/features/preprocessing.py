@@ -18,9 +18,9 @@ def decode_signals_after_pool(pooled_signals):
         signal_ids.append(pooled_signal[0])
         signals.append(pooled_signal[1])
     # using np array for decoding is verrrrry faster
-    decoded_signals_df = pd.DataFrame(np.array(signals)).T
+    decoded_signals_df = pd.DataFrame(np.array(signals).astype('float16')).T
     # the column should be int for sorting
-    signal_ids = pd.Series(signal_ids).astype(int)
+    signal_ids = pd.Series(signal_ids).astype('int8')
     decoded_signals_df.columns = signal_ids
     decoded_signals_df.sort_index(axis=1, ascending=True, inplace=True)
     # change col type to str
@@ -87,4 +87,4 @@ def denoise_signal(id_signal_pair, wavelet='db4', level=1):
                  for i in coeff[1:])
 
     # Reconstruct the signal using the thresholded coefficients
-    return pywt.waverec(coeff, wavelet, mode='per')
+    return signal_id, pywt.waverec(coeff, wavelet, mode='per')

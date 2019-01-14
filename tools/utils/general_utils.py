@@ -1,15 +1,15 @@
+import argparse
+import functools
+import inspect
 import sys
 import time
-import inspect
-import argparse
-import yaml
-import functools
-from tqdm import tqdm
-from logging import Formatter, StreamHandler, FileHandler, DEBUG
+from logging import DEBUG, FileHandler, Formatter, StreamHandler
 
 import pandas as pd
-
+import requests
+import yaml
 from lightgbm.callback import _format_eval_result
+from tqdm import tqdm
 
 
 # ==========================================
@@ -126,9 +126,9 @@ def log_evaluation(logger, period=1, show_stdv=True, level=DEBUG):
                 env.evaluation_result_list and \
                 (env.iteration + 1) % period == 0:
             result = '\t'.join(
-                    [_format_eval_result(x, show_stdv)
-                        for x in env.evaluation_result_list])
-            logger.log(level, '[{}]\t{}'.format(env.iteration+1, result))
+                [_format_eval_result(x, show_stdv)
+                 for x in env.evaluation_result_list])
+            logger.log(level, '[{}]\t{}'.format(env.iteration + 1, result))
     _callback.order = 10
     return _callback
 
@@ -157,3 +157,22 @@ def dec_timer(func):
         return res
 
     return _timer
+
+
+# ==========================================
+#  life hack utils
+# ==========================================
+def send_line_notification(message):
+    line_token = 'pGwhms1Zi7gVzwAsS289da8G4JlhWYlgpA2gJRhHh2L'  # 終わったら無効化する
+    endpoint = 'https://notify-api.line.me/api/notify'
+    message = "\n{}".format(message)
+    payload = {'message': message}
+    headers = {'Authorization': 'Bearer {}'.format(line_token)}
+    requests.post(endpoint, data=payload, headers=headers)
+
+
+# ==========================================
+#  test
+# ==========================================
+if __name__ == '__main__':
+    send_line_notification('test')
