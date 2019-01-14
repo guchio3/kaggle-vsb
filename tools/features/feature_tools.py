@@ -67,7 +67,7 @@ def _mk_features(load_func, feature_func, nthread, exp_ids, test=False,
     if series_df is None:
         return None, None
 
-    # Test is only 20338, so i use splitting only for series.
+    # Test meta is only 20338, so i use splitting only for series.
     series_dfs = split_df(
         meta_df,
         series_df,

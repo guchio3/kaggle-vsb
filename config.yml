@@ -18,8 +18,9 @@ lgbm_params:
     num_leaves: 25
     max_depth: -1
     subsample: 0.8
-    colsample_bytree: 0.8
     bagging_freq: 1
+    colsample_bytree: 0.8
+    feature_fraction: 0.8
     #    reg_alpha: 
     #    reg_lambda: 
     #    min_split_gain: 
@@ -35,4 +36,8 @@ features:
     - e002_hp_dn_basic_max
     - e002_hp_dn_basic_min
     - e002_hp_dn_basic_std
-      #    - e002_hp_dn_basic_mean
+    - e002_hp_dn_basic_mean
+    - e002_hp_basic_max
+    - e002_hp_basic_min
+    - e002_hp_basic_std
+    - e002_hp_basic_mean
