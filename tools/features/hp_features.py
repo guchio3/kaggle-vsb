@@ -5,6 +5,7 @@ from ..utils.general_utils import dec_timer, sel_log
 
 
 def e002_hp_basic(df):
+    df = df.astype('float64')
     features = pd.DataFrame()
     features['max'] = df.max(axis=0)
     features['min'] = df.min(axis=0)

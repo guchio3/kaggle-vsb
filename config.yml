@@ -1,6 +1,6 @@
 # preprocess settings
 preprocess:
-    resampling: True
+    resampling: False
     resampling_type: under
     resampling_seed: 71
 
@@ -10,6 +10,7 @@ train:
 
 # lightGBM parameters
 lgbm_params:
+    boosting: gbdt
     verbose: -1
     random_state: 71
     objective: binary
@@ -35,11 +36,11 @@ features:
     - e001_base_std
     - e002_hp_dn_basic_max
     - e002_hp_dn_basic_min
-    - e002_hp_dn_basic_std
+      #    - e002_hp_dn_basic_std
       #    - e002_hp_dn_basic_mean
     - e002_hp_basic_max
     - e002_hp_basic_min
-    - e002_hp_basic_std
+      #    - e002_hp_basic_std
     - e002_hp_basic_mean
     - e003_hp_dn_3_phase_basic_corr_0
     - e003_hp_dn_3_phase_basic_corr_1

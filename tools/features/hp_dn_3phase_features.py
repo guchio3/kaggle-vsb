@@ -5,6 +5,7 @@ from ..utils.general_utils import dec_timer, sel_log
 
 
 def e003_hp_dn_3phase_basic(df):
+    df = df.astype('float64')
     corrs = df.corr()
     corrs.columns = ['corr_0', 'corr_1', 'corr_2']
     features = corrs
