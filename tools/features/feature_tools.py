@@ -11,7 +11,7 @@ from ..utils.general_utils import dec_timer, sel_log
 
 @dec_timer
 def split_df(base_df, target_df, split_name,
-             target_name, nthread, logger=None):
+             target_name, n_sections, logger=None):
     '''
     policy
     ------------
@@ -20,10 +20,10 @@ def split_df(base_df, target_df, split_name,
 
     '''
     sel_log(
-        f'now splitting a df to {nthread} dfs using {split_name} ...',
+        f'now splitting a df to {n_sections} dfs using {split_name} ...',
         logger)
     split_ids = base_df[split_name].unique()
-    splitted_ids = np.array_split(split_ids, nthread)
+    splitted_ids = np.array_split(split_ids, n_sections)
     target_ids = [base_df.set_index(split_name)
                   .loc[splitted_id][target_name]
                   for splitted_id in splitted_ids]
@@ -68,12 +68,13 @@ def _mk_features(load_func, feature_func, nthread, exp_ids, test=False,
         return None, None
 
     # Test meta is only 20338, so i use splitting only for series.
+    # The n_sections is devided by 3 because it's 3 phase data.
     series_dfs = split_df(
         meta_df,
         series_df,
         'id_measurement',
         'signal_id',
-        nthread,
+        meta_df.shape[0]//3,
         logger=logger)
 
     with Pool(nthread) as p:

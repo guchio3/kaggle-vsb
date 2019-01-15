@@ -1,39 +1,41 @@
 import pandas as pd
-
 import pyarrow.parquet as pq
 
 from ..utils.general_utils import dec_timer, sel_log
 
 
-def e002_hp_dn_basic(df):
+def e003_hp_dn_3phase_basic(df):
     features = pd.DataFrame()
-    features['max'] = df.max(axis=0)
-    features['min'] = df.min(axis=0)
-    features['mean'] = df.mean(axis=0)
-    features['std'] = df.std(axis=0)
-    features = features.add_prefix('e002_hp_dn_basic_').reset_index(drop=True)
+    corrs = df.corr().reset_index().rename(
+        columns={
+            0: 'corr_0',
+            1: 'corr_1',
+            2: 'corr_2',
+        })
+    features = pd.concat([features, corrs], axis=1)
+    features = features.add_prefix(
+        'e003_hp_dn_3_phase_basic_').reset_index(drop=True)
     return features
 
 
-def _hp_dn_basic_features(df, exp_ids):
+def _hp_dn_3phase_basic_features(df, exp_ids):
     _features = []
     _features.append(pd.DataFrame(df.columns,
                                   columns=['signal_id'],
                                   dtype=int))
-    if 'e002' in exp_ids:
-        _features.append(e002_hp_dn_basic(df))
+    if 'e003' in exp_ids:
+        _features.append(e003_hp_dn_3phase_basic(df))
     features = pd.concat(_features, axis=1)
     return features
 
 
 @dec_timer
-def _load_hp_dn_features_src(exp_ids, test, series_df, meta_df, logger):
+def _load_hp_dn_3phase_features_src(exp_ids, test, series_df, meta_df, logger):
     target_ids = [
-        'e002',
+        'e003',
     ]
     if len(set(target_ids) & set(exp_ids)) < 1:
         sel_log(f'''
-                ======== {__name__} ========
                 Stop feature making because even 1 element in exp_ids
                     {exp_ids}
                 does not in target_ids

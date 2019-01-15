@@ -32,6 +32,7 @@ def _load_base_features_src(exp_ids, test, series_df, meta_df, logger):
     ]
     if len(set(target_ids) & set(exp_ids)) < 1:
         sel_log(f'''
+                ======== {__name__} ========
                 Stop feature making because even 1 element in exp_ids
                     {exp_ids}
                 does not in target_ids
