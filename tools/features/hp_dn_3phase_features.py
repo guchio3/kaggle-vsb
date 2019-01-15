@@ -5,14 +5,9 @@ from ..utils.general_utils import dec_timer, sel_log
 
 
 def e003_hp_dn_3phase_basic(df):
-    features = pd.DataFrame()
-    corrs = df.corr().reset_index().rename(
-        columns={
-            0: 'corr_0',
-            1: 'corr_1',
-            2: 'corr_2',
-        })
-    features = pd.concat([features, corrs], axis=1)
+    corrs = df.corr()
+    corrs.columns = ['corr_0', 'corr_1', 'corr_2']
+    features = corrs
     features = features.add_prefix(
         'e003_hp_dn_3_phase_basic_').reset_index(drop=True)
     return features
