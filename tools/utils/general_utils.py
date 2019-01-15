@@ -33,10 +33,10 @@ def parse_args(logger=None):
                         type=str,
                         nargs='+',
                         required=True)
-    parser.add_argument('-s', '--sub_id',
-                        help='sub experiment id',
-                        type=str,
-                        required=True)
+    # parser.add_argument('-s', '--sub_id',
+    #                     help='sub experiment id',
+    #                     type=str,
+    #                     required=True)
     parser.add_argument('-n', '--nthread',
                         help='number of avalable threads.',
                         type=int,

@@ -43,6 +43,6 @@ if __name__ == '__main__':
     logger.info('')
     logger.info('')
     logger.info(
-        f'============ EXP {args.exp_ids[0]}-{args.sub_id}, START MAKING FEATURES =============')
+        f'============ EXP {args.exp_ids[0]}, START MAKING FEATURES =============')
     mk_features(args, logger)
     send_line_notification(f'Finished: {" ".join(sys.argv)}')

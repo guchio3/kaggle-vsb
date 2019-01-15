@@ -191,6 +191,6 @@ if __name__ == '__main__':
     logger.info('')
     logger.info('')
     logger.info(
-        f'============ EXP {args.exp_ids[0]}-{args.sub_id}, START TRAINING =============')
+        f'============ EXP {args.exp_ids[0]}, START TRAINING =============')
     train(args, logger)
     send_line_notification(f'Finished: {" ".join(sys.argv)}')
