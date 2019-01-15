@@ -15,7 +15,7 @@ def e002_hp_basic(df):
     return features
 
 
-def _hp_basic_features(df, exp_ids):
+def _hp_features(df, exp_ids):
     _features = []
     _features.append(pd.DataFrame(df.columns,
                                   columns=['signal_id'],

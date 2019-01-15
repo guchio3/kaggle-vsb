@@ -14,7 +14,7 @@ def e003_hp_dn_3phase_basic(df):
     return features
 
 
-def _hp_dn_3phase_basic_features(df, exp_ids):
+def _hp_dn_3phase_features(df, exp_ids):
     _features = []
     _features.append(pd.DataFrame(df.columns,
                                   columns=['signal_id'],

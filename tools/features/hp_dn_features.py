@@ -1,5 +1,5 @@
+import numpy as np
 import pandas as pd
-
 import pyarrow.parquet as pq
 
 from ..utils.general_utils import dec_timer, sel_log
@@ -16,7 +16,27 @@ def e002_hp_dn_basic(df):
     return features
 
 
-def _hp_dn_basic_features(df, exp_ids):
+def e006_hp_dn_percentiles(df):
+    df = df.astype('float64')
+    features = pd.DataFrame()
+    features['perc1'] = np.percentile(df, 1, axis=0)
+    features['perc5'] = np.percentile(df, 5, axis=0)
+    features['perc10'] = np.percentile(df, 10, axis=0)
+    features['perc90'] = np.percentile(df, 90, axis=0)
+    features['perc95'] = np.percentile(df, 95, axis=0)
+    features['perc99'] = np.percentile(df, 99, axis=0)
+    features['perc99m1'] = features['perc99'] - features['perc1']
+    features['perc95m5'] = features['perc95'] - features['perc5']
+    features['perc90m10'] = features['perc90'] - features['perc10']
+    features['perc1p99'] = features['perc1'] / features['perc99']
+    features['perc5p95'] = features['perc5'] / features['perc95']
+    features['perc10p90'] = features['perc10'] / features['perc90']
+    features = features.add_prefix(
+        'e006_hp_dn_percentiles_').reset_index(drop=True)
+    return features
+
+
+def _hp_dn_features(df, exp_ids):
     _features = []
     _features.append(pd.DataFrame(df.columns,
                                   columns=['signal_id'],
@@ -31,6 +51,7 @@ def _hp_dn_basic_features(df, exp_ids):
 def _load_hp_dn_features_src(exp_ids, test, series_df, meta_df, logger):
     target_ids = [
         'e002',
+        'e006',
     ]
     if len(set(target_ids) & set(exp_ids)) < 1:
         sel_log(f'''
