@@ -45,3 +45,15 @@ features:
     - e003_hp_dn_3_phase_basic_corr_0
     - e003_hp_dn_3_phase_basic_corr_1
     - e003_hp_dn_3_phase_basic_corr_2
+    - e006_hp_dn_percentiles_perc1
+    - e006_hp_dn_percentiles_perc5
+    - e006_hp_dn_percentiles_perc10
+    - e006_hp_dn_percentiles_perc90
+    - e006_hp_dn_percentiles_perc95
+    - e006_hp_dn_percentiles_perc99
+    - e006_hp_dn_percentiles_perc99m1
+    - e006_hp_dn_percentiles_perc95m5
+    - e006_hp_dn_percentiles_perc90m10
+    - e006_hp_dn_percentiles_perc1p99
+    - e006_hp_dn_percentiles_perc5p95
+    - e006_hp_dn_percentiles_perc10p90
