@@ -55,7 +55,8 @@ def save_importance(features, fold_importance_dict,
 # ==========================================
 #  tools for EDA
 # ==========================================
-def _plt_3phase_current(df, meta_df, id_measurement, ax, ylim, fontsize):
+def _plt_3phase_current(df, meta_df, id_measurement,
+                        ax, ylim, alpha, fontsize):
     # get info from meta_df
     target_df = meta_df.query(f'id_measurement == {id_measurement}')
     signal_ids = target_df.signal_id.astype(str)
@@ -67,7 +68,7 @@ def _plt_3phase_current(df, meta_df, id_measurement, ax, ylim, fontsize):
 
     # plot
     for i in range(3):
-        ax.plot(plt_df.iloc[:, i], label=f'phase {phase[i]}', alpha=0.7)
+        ax.plot(plt_df.iloc[:, i], label=f'phase {phase[i]}', alpha=alpha)
 
     # decoration
     if y_preds is None:
@@ -85,7 +86,8 @@ def _plt_3phase_current(df, meta_df, id_measurement, ax, ylim, fontsize):
 
 
 def plt_3phase_currents(df, meta_df, id_measurements, fig_title=None,
-                        height_base=3, width_base=8, col_num=4, ylim=None):
+                        height_base=3, width_base=8, col_num=4,
+                        ylim=None, alpha=1.):
     fontsize = int(height_base * width_base / 2)
     if hasattr(id_measurements, "__iter__"):
         height, width = len(id_measurements) // col_num, col_num
@@ -102,7 +104,14 @@ def plt_3phase_currents(df, meta_df, id_measurements, fig_title=None,
 
     for i, id_measurement in enumerate(id_measurements):
         ax = axs[i]
-        _plt_3phase_current(df, meta_df, id_measurement, ax, ylim, fontsize)
+        _plt_3phase_current(
+            df,
+            meta_df,
+            id_measurement,
+            ax,
+            ylim,
+            alpha,
+            fontsize)
 
     # decoration
     if fig_title:

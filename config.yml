@@ -7,6 +7,7 @@ preprocess:
 # training settings
 train:
     fold_num: 5
+    with_label: True
 
 # lightGBM parameters
 lgbm_params:
@@ -73,3 +74,12 @@ features:
     - e007_hp_dn_abs_thresh_overs_th10_time_std
     - e007_hp_dn_abs_thresh_overs_th10_time_skew
     - e007_hp_dn_abs_thresh_overs_th10_time_kurt
+      #    - e008_hp_dn_scaled_group_scaled_kurt
+      #    - e008_hp_dn_scaled_group_scaled_mean
+      #- e008_hp_dn_scaled_group_scaled_skew
+      #    - e008_hp_dn_scaled_group_scaled_std
+      #    - e008_hp_dn_scaled_phase_scaled_kurt
+      #- e008_hp_dn_scaled_phase_scaled_mean
+      #    - e008_hp_dn_scaled_phase_scaled_skew
+      #    - e008_hp_dn_scaled_phase_scaled_std
+
