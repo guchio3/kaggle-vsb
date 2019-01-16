@@ -44,8 +44,9 @@ def save_importance(features, fold_importance_dict,
         plt_dfs.append(plt_df)
     plt_df = pd.concat(plt_dfs, axis=0)
 
-    sns.barplot(x=main_metric, y='features', data=plt_df.head(topk),
-                order=df.features)
+    # Plot! note that use only top-k
+    sns.barplot(x=main_metric, y='features', data=plt_df,
+                order=df.features.head(topk))
     plt.title('LightGBM Features (avg over folds)')
     plt.tight_layout()
     plt.savefig(filename_base + '.png')
