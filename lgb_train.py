@@ -7,7 +7,7 @@ from logging import getLogger
 
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import GroupShuffleSplit
+from sklearn.model_selection import GroupShuffleSplit, GroupKFold
 from tqdm import tqdm
 
 import tools.models.my_lightgbm as mlgb
@@ -76,8 +76,10 @@ def train(args, logger):
 
     # -- Split using group k-fold w/ shuffling
     # NOTE: this is not stratified, I wanna implement it in the future
-    gss = GroupShuffleSplit(configs['train']['fold_num'], random_state=71)
-    folds = gss.split(features_df, target, groups=id_measurement)
+    gkf = GroupKFold(configs['train']['fold_num'])
+    folds = gkf.split(features_df, target, groups=id_measurement)
+    # gss = GroupShuffleSplit(configs['train']['fold_num'], random_state=71)
+    # folds = gss.split(features_df, target, groups=id_measurement)
     folds, pred_folds = tee(folds)
 
     # -- Make training dataset
@@ -105,6 +107,7 @@ def train(args, logger):
     sel_log('predicting ...', logger)
     oofs = []
     y_trues = []
+    val_idxes = []
     scores = []
     fold_importance_dict = {}
     for i, idxes in tqdm(list(enumerate(pred_folds))):
@@ -116,6 +119,7 @@ def train(args, logger):
         y_true = target.values[val_idx]
         oofs.append(y_pred)
         y_trues.append(y_true)
+        val_idxes.append(val_idx)
 
         # Calc MCC using thresh of 0.5
         MCC = calc_MCC(y_true, y_pred, 0.5)
@@ -141,7 +145,7 @@ def train(args, logger):
 
     # Save oofs
     with open('./oofs/' + filename_base + '_oofs.pkl', 'wb') as fout:
-        pickle.dump(oofs, fout)
+        pickle.dump([val_idxes, oofs], fout)
 
     # Save importances
     save_importance(configs['features'], fold_importance_dict,
