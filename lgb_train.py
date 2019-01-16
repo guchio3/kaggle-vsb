@@ -91,6 +91,7 @@ def train(args, logger):
     sel_log('start training ...', None)
     hist, cv_model = mlgb.cv(
         params=PARAMS,
+        num_boost_round=20000,
         folds=folds,
         train_set=train_set,
         verbose_eval=50,

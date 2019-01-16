@@ -57,3 +57,19 @@ features:
     - e006_hp_dn_percentiles_perc1p99
     - e006_hp_dn_percentiles_perc5p95
     - e006_hp_dn_percentiles_perc10p90
+    - e007_hp_dn_abs_thresh_overs_th1_count
+    - e007_hp_dn_abs_thresh_overs_th1_time_std
+    - e007_hp_dn_abs_thresh_overs_th1_time_skew
+    - e007_hp_dn_abs_thresh_overs_th1_time_kurt
+    - e007_hp_dn_abs_thresh_overs_th3_count
+    - e007_hp_dn_abs_thresh_overs_th3_time_std
+    - e007_hp_dn_abs_thresh_overs_th3_time_skew
+    - e007_hp_dn_abs_thresh_overs_th3_time_kurt
+    - e007_hp_dn_abs_thresh_overs_th5_count
+    - e007_hp_dn_abs_thresh_overs_th5_time_std
+    - e007_hp_dn_abs_thresh_overs_th5_time_skew
+    - e007_hp_dn_abs_thresh_overs_th5_time_kurt
+    - e007_hp_dn_abs_thresh_overs_th10_count
+    - e007_hp_dn_abs_thresh_overs_th10_time_std
+    - e007_hp_dn_abs_thresh_overs_th10_time_skew
+    - e007_hp_dn_abs_thresh_overs_th10_time_kurt
