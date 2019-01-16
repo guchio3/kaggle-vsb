@@ -91,12 +91,13 @@ def train(args, logger):
     sel_log('start training ...', None)
     hist, cv_model = mlgb.cv(
         params=PARAMS,
-        num_boost_round=20000,
+        num_boost_round=10000,
         folds=folds,
         train_set=train_set,
         verbose_eval=50,
-        early_stopping_rounds=100,
-        feval=lgb_MCC,
+        early_stopping_rounds=200,
+        metrics='auc',
+        # feval=lgb_MCC,
         callbacks=[log_evaluation(logger, period=50)],
     )
 
