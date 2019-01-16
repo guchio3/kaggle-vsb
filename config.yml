@@ -7,7 +7,7 @@ preprocess:
 # training settings
 train:
     fold_num: 5
-    with_label: True
+    label_train: False
 
 # lightGBM parameters
 lgbm_params:
@@ -58,28 +58,51 @@ features:
     - e006_hp_dn_percentiles_perc1p99
     - e006_hp_dn_percentiles_perc5p95
     - e006_hp_dn_percentiles_perc10p90
-    - e007_hp_dn_abs_thresh_overs_th1_count
-    - e007_hp_dn_abs_thresh_overs_th1_time_std
-    - e007_hp_dn_abs_thresh_overs_th1_time_skew
-    - e007_hp_dn_abs_thresh_overs_th1_time_kurt
-    - e007_hp_dn_abs_thresh_overs_th3_count
-    - e007_hp_dn_abs_thresh_overs_th3_time_std
-    - e007_hp_dn_abs_thresh_overs_th3_time_skew
-    - e007_hp_dn_abs_thresh_overs_th3_time_kurt
-    - e007_hp_dn_abs_thresh_overs_th5_count
-    - e007_hp_dn_abs_thresh_overs_th5_time_std
-    - e007_hp_dn_abs_thresh_overs_th5_time_skew
-    - e007_hp_dn_abs_thresh_overs_th5_time_kurt
     - e007_hp_dn_abs_thresh_overs_th10_count
-    - e007_hp_dn_abs_thresh_overs_th10_time_std
-    - e007_hp_dn_abs_thresh_overs_th10_time_skew
+    - e007_hp_dn_abs_thresh_overs_th10_kurt
+    - e007_hp_dn_abs_thresh_overs_th10_skew
+    - e007_hp_dn_abs_thresh_overs_th10_std
     - e007_hp_dn_abs_thresh_overs_th10_time_kurt
+    - e007_hp_dn_abs_thresh_overs_th10_time_skew
+    - e007_hp_dn_abs_thresh_overs_th10_time_std
+    - e007_hp_dn_abs_thresh_overs_th1_count
+    - e007_hp_dn_abs_thresh_overs_th1_kurt
+    - e007_hp_dn_abs_thresh_overs_th1_skew
+    - e007_hp_dn_abs_thresh_overs_th1_std
+    - e007_hp_dn_abs_thresh_overs_th1_time_kurt
+    - e007_hp_dn_abs_thresh_overs_th1_time_skew
+    - e007_hp_dn_abs_thresh_overs_th1_time_std
+    - e007_hp_dn_abs_thresh_overs_th3_count
+    - e007_hp_dn_abs_thresh_overs_th3_kurt
+    - e007_hp_dn_abs_thresh_overs_th3_skew
+    - e007_hp_dn_abs_thresh_overs_th3_std
+    - e007_hp_dn_abs_thresh_overs_th3_time_kurt
+    - e007_hp_dn_abs_thresh_overs_th3_time_skew
+    - e007_hp_dn_abs_thresh_overs_th3_time_std
+    - e007_hp_dn_abs_thresh_overs_th5_count
+    - e007_hp_dn_abs_thresh_overs_th5_kurt
+    - e007_hp_dn_abs_thresh_overs_th5_skew
+    - e007_hp_dn_abs_thresh_overs_th5_std
+    - e007_hp_dn_abs_thresh_overs_th5_time_kurt
+    - e007_hp_dn_abs_thresh_overs_th5_time_skew
+    - e007_hp_dn_abs_thresh_overs_th5_time_std
       #    - e008_hp_dn_scaled_group_scaled_kurt
       #    - e008_hp_dn_scaled_group_scaled_mean
-      #- e008_hp_dn_scaled_group_scaled_skew
+      #    - e008_hp_dn_scaled_group_scaled_skew
       #    - e008_hp_dn_scaled_group_scaled_std
       #    - e008_hp_dn_scaled_phase_scaled_kurt
-      #- e008_hp_dn_scaled_phase_scaled_mean
+      #    - e008_hp_dn_scaled_phase_scaled_mean
       #    - e008_hp_dn_scaled_phase_scaled_skew
       #    - e008_hp_dn_scaled_phase_scaled_std
-
+    - e009_hp_dn_3phase_time_diffs_th10_time_diff_kurt
+    - e009_hp_dn_3phase_time_diffs_th10_time_diff_skew
+    - e009_hp_dn_3phase_time_diffs_th10_time_diff_std
+    - e009_hp_dn_3phase_time_diffs_th1_time_diff_kurt
+    - e009_hp_dn_3phase_time_diffs_th1_time_diff_skew
+    - e009_hp_dn_3phase_time_diffs_th1_time_diff_std
+    - e009_hp_dn_3phase_time_diffs_th3_time_diff_kurt
+    - e009_hp_dn_3phase_time_diffs_th3_time_diff_skew
+    - e009_hp_dn_3phase_time_diffs_th3_time_diff_std
+    - e009_hp_dn_3phase_time_diffs_th5_time_diff_kurt
+    - e009_hp_dn_3phase_time_diffs_th5_time_diff_skew
+    - e009_hp_dn_3phase_time_diffs_th5_time_diff_std

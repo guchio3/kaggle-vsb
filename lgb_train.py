@@ -12,6 +12,7 @@ from tqdm import tqdm
 
 import tools.models.my_lightgbm as mlgb
 from tools.features.feature_tools import load_features
+from tools.features.y_preds_features import y_preds_features
 from tools.utils.general_utils import (dec_timer, load_configs, log_evaluation,
                                        logInit, parse_args, sel_log,
                                        send_line_notification)
@@ -133,6 +134,61 @@ def train(args, logger):
 
     sel_log(f'MCC_mean: {np.mean(scores)}, MCC_std: {np.std(scores)}', logger)
 
+    # -- Retrainig using the preds
+    if configs['train']['label_train']:
+        # -- Make training dataset
+        y_pres_df = y_preds_features(oofs, val_idxes)
+        features_df = pd.concat([features_df, y_preds_df], axis=1)
+        train_set = mlgb.Dataset(features_df.values, target.values)
+    
+        # -- CV
+        # Set params
+        PARAMS = configs['lgbm_params']
+        PARAMS['nthread'] = args.nthread
+    
+        sel_log('RETRAINED -- start training ...', None)
+        hist, cv_model = mlgb.cv(
+            params=PARAMS,
+            num_boost_round=10000,
+            folds=folds,
+            train_set=train_set,
+            verbose_eval=50,
+            early_stopping_rounds=200,
+            metrics='auc',
+            # feval=lgb_MCC,
+            callbacks=[log_evaluation(logger, period=50)],
+        )
+    
+        # -- Prediction
+        sel_log('RETRAINED -- predicting ...', logger)
+        oofs = []
+        y_trues = []
+        val_idxes = []
+        scores = []
+        fold_importance_dict = {}
+        for i, idxes in tqdm(list(enumerate(pred_folds))):
+            trn_idx, val_idx = idxes
+            booster = cv_model.boosters[i]
+    
+            # Get and store oof and y_true
+            y_pred = booster.predict(features_df.values[val_idx])
+            y_true = target.values[val_idx]
+            oofs.append(y_pred)
+            y_trues.append(y_true)
+            val_idxes.append(val_idx)
+    
+            # Calc MCC using thresh of 0.5
+            MCC = calc_MCC(y_true, y_pred, 0.5)
+            scores.append(MCC)
+    
+            # Save importance info
+            fold_importance_df = pd.DataFrame()
+            fold_importance_df['split'] = booster.feature_importance('split')
+            fold_importance_df['gain'] = booster.feature_importance('gain')
+            fold_importance_dict[i] = fold_importance_df
+    
+        sel_log(f'RETRAINED -- MCC_mean: {np.mean(scores)}, MCC_std: {np.std(scores)}', logger)
+    
     # Calc best MCC
     sel_log('calculating the best MCC ...', None)
     y_true = np.concatenate(y_trues, axis=0)
