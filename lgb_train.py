@@ -141,7 +141,7 @@ def train(args, logger):
     sel_log(f'best_MCC: {best_MCC}, best_thresh: {best_thresh}', logger)
 
     # -- Post processings
-    filename_base = f'{args.exp_ids[0]}_{exp_time}_{best_MCC:.4}_{best_thresh:.2}'
+    filename_base = f'{args.exp_ids[0]}_{exp_time}_{best_MCC:.4}_{best_thresh:.3}'
 
     # Save oofs
     with open('./oofs/' + filename_base + '_oofs.pkl', 'wb') as fout:

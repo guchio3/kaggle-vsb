@@ -61,23 +61,30 @@ def _plt_3phase_current(df, meta_df, id_measurement, ax, ylim, fontsize):
     signal_ids = target_df.signal_id.astype(str)
     phase = target_df.phase.tolist()
     targets = target_df.target.tolist()
+    y_preds = target_df['y_pred'].round(4).tolist() \
+        if 'y_pred' in target_df.columns else None
     plt_df = df.loc[:, signal_ids]
 
     # plot
     for i in range(3):
-        ax.plot(plt_df.iloc[:, i], label=f'phase {phase[i]}')
+        ax.plot(plt_df.iloc[:, i], label=f'phase {phase[i]}', alpha=0.7)
 
     # decoration
-    ax.set_title(
-        f'id_measurement: {id_measurement}, targets: {targets}',
-        fontsize=fontsize)
+    if y_preds is None:
+        ax.set_title(
+            f'id_measurement: {id_measurement}, targets: {targets}',
+            fontsize=fontsize)
+    else:
+        ax.set_title(
+            f'id_measurement: {id_measurement}, targets: {targets}, y_preds: {y_preds}',
+            fontsize=fontsize)
     ax.set_xlabel('time', fontsize=fontsize)
     ax.set_ylabel('signal', fontsize=fontsize)
     ax.legend()
     ax.set_ylim(ylim)
 
 
-def plt_3phase_currents(df, meta_df, id_measurements, title=None,
+def plt_3phase_currents(df, meta_df, id_measurements, fig_title=None,
                         height_base=3, width_base=8, col_num=4, ylim=None):
     fontsize = int(height_base * width_base / 2)
     if hasattr(id_measurements, "__iter__"):
@@ -98,10 +105,10 @@ def plt_3phase_currents(df, meta_df, id_measurements, title=None,
         _plt_3phase_current(df, meta_df, id_measurement, ax, ylim, fontsize)
 
     # decoration
-    if title:
+    if fig_title:
         if len(id_measurements) == 1:
-            fig.suptitle(title, fontsize=fontsize, va='bottom')
+            fig.suptitle(fig_title, fontsize=fontsize, va='bottom')
         else:
-            fig.suptitle(title, fontsize=fontsize * 1.5, va='bottom')
+            fig.suptitle(fig_title, fontsize=fontsize * 1.5, va='bottom')
     # apply tight_layout
     fig.tight_layout(rect=[0, 0.08, 1, 0.99])
