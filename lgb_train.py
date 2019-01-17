@@ -297,7 +297,8 @@ def train(args, logger):
         preds = []
         for booster, best_thresh in tqdm(zip(cv_model.boosters, best_threshs)):
             pred = booster.predict(test_features_df.values)
-            preds.append(pred > best_thresh)
+            preds.append(pred * 0.5 / best_thresh)
+            # preds.append(pred > best_thresh)
         sub_values = np.mean(preds, axis=0)
         target_values = (sub_values > 0.5).astype(np.int32)
 
