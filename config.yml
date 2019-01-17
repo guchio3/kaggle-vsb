@@ -7,7 +7,8 @@ preprocess:
 # training settings
 train:
     fold_num: 5
-    label_train: True
+    fold_type: skf
+    label_train: False
 
 # lightGBM parameters
 lgbm_params:

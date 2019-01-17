@@ -7,7 +7,8 @@ from logging import getLogger
 
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import GroupKFold, GroupShuffleSplit
+from sklearn.model_selection import (GroupKFold, GroupShuffleSplit,
+                                     StratifiedKFold)
 from tqdm import tqdm
 
 import tools.models.my_lightgbm as mlgb
@@ -78,8 +79,14 @@ def train(args, logger):
 
     # -- Split using group k-fold w/ shuffling
     # NOTE: this is not stratified, I wanna implement it in the future
-    gkf = GroupKFold(configs['train']['fold_num'])
-    folds = gkf.split(features_df, target, groups=id_measurement)
+    if configs['train']['fold_type'] == 'gkf':
+        gkf = GroupKFold(configs['train']['fold_num'])
+        folds = gkf.split(features_df, target, groups=id_measurement)
+    elif configs['train']['fold_type'] == 'skf':
+        skf = StratifiedKFold(configs['train']['fold_num'], random_state=71)
+        folds = skf.split(features_df, target, groups=id_measurement)
+    else:
+        print(f"ERROR: wrong fold_type, {configs['train']['fold_type']}")
     # gss = GroupShuffleSplit(configs['train']['fold_num'], random_state=71)
     # folds = gss.split(features_df, target, groups=id_measurement)
     folds, pred_folds = tee(folds)
