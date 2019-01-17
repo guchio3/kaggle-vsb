@@ -57,6 +57,13 @@ def save_features(features_df, base_dir, logger=None):
             features_df[feature].to_pickle(save_filename, compression='gzip')
 
 
+def select_features(df, importance_csv_path, metric='gain_mean', topk=10):
+    importance_df = pd.read_csv(importance_csv_path)
+    importance_df.sort_values(metric, ascending=False, inplace=True)
+    selected_df = df[importance_df.head(topk).features]
+    return selected_df
+
+
 @dec_timer
 def _mk_features(load_func, feature_func, nthread, exp_ids, test=False,
                  series_df=None, meta_df=None, logger=None):

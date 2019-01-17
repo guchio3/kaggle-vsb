@@ -7,8 +7,12 @@ preprocess:
 # training settings
 train:
     fold_num: 5
-    fold_type: skf
+    fold_type: gkf
     label_train: False
+    single_model: False
+    feature_selection: False
+    feature_select_path: './importances/e012_2019-01-17-21-14-16_1.0_0.362_importances.csv'
+    feature_topk: 5
 
 # lightGBM parameters
 lgbm_params:

@@ -22,15 +22,25 @@ def calc_MCC(y_true, y_pred, thresh, epsilon=1e-7):
     return MCC
 
 
-def calc_best_MCC(y_true, y_pred, bins=30):
-    best_MCC = 0.
-    best_thresh = 0.
-    for thresh in tqdm(np.linspace(0.001, 0.999, bins)):
-        MCC = calc_MCC(y_true, y_pred, thresh)
-        if MCC > best_MCC:
-            best_MCC = MCC
-            best_thresh = thresh
-    return best_MCC, best_thresh
+def calc_best_MCC(y_trues, y_preds, bins=300):
+    best_threshs = []
+    # calc best MCC for each fold
+    for y_true, y_pred in zip(y_trues, y_preds):
+        _best_MCC = 0.
+        best_thresh = 0.
+        for thresh in tqdm(np.linspace(0.001, 0.999, bins)):
+            MCC = calc_MCC(y_true, y_pred, thresh)
+            if MCC > _best_MCC:
+                _best_MCC = MCC
+                best_thresh = thresh
+        best_threshs.append(best_thresh)
+    # calc best MCC for the whole data
+    whole_y_true = np.concatenate(y_trues, axis=0)
+    _y_preds = [(y_pred > best_thresh).astype(int)
+                for y_pred, best_thresh in zip(y_preds, best_threshs)]
+    whole_y_pred = np.concatenate(_y_preds, axis=0)
+    best_MCC = calc_MCC(whole_y_true, whole_y_pred, 0.5)
+    return best_MCC, best_threshs
 
 
 def lgb_MCC(preds, train_data):
