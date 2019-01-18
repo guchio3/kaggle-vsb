@@ -11,7 +11,7 @@ train:
     label_train: False
     single_model: True
     feature_selection: True
-    feature_select_path: './importances/e013_2019-01-19-01-50-10_0.5687_importances.csv'
+    feature_select_path: './importances/e013_2019-01-19-02-36-17_0.5686_importances.csv'
     feature_select_metric: 'gain_mean'
     feature_topk: 15
 
