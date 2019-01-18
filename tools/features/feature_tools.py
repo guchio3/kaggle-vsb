@@ -59,7 +59,11 @@ def save_features(features_df, base_dir, logger=None):
 
 def select_features(df, importance_csv_path, metric='gain_mean', topk=10):
     importance_df = pd.read_csv(importance_csv_path)
-    importance_df.sort_values(metric, ascending=False, inplace=True)
+    if metric == 'gain_cov' or metric == 'split_cov':
+        ascending = True
+    else:
+        ascending = False
+    importance_df.sort_values(metric, ascending=ascending, inplace=True)
     selected_df = df[importance_df.head(topk).features]
     return selected_df
 

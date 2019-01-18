@@ -70,7 +70,7 @@ def train(args, logger):
     if configs['train']['feature_selection']:
         features_df = select_features(features_df,
                                       configs['train']['feature_select_path'],
-                                      'gain_mean',
+                                      configs['train']['feature_select_metric'],
                                       configs['train']['feature_topk'])
     features = features_df.columns
 
@@ -92,7 +92,9 @@ def train(args, logger):
         skf = StratifiedKFold(configs['train']['fold_num'], random_state=71)
         folds = skf.split(features_df, target, groups=id_measurement)
     else:
-        print(f"ERROR: wrong fold_type, {configs['train']['fold_type']}")
+        sel_log(
+            f"ERROR: wrong fold_type, {configs['train']['fold_type']}",
+            None)
     # gss = GroupShuffleSplit(configs['train']['fold_num'], random_state=71)
     # folds = gss.split(features_df, target, groups=id_measurement)
     folds, pred_folds = tee(folds)
@@ -134,6 +136,23 @@ def train(args, logger):
             early_stopping_rounds=200,
             callbacks=[log_evaluation(logger, period=50)],
         )
+
+        # Calc cv mcc
+        _oofs = []
+        _y_trues = []
+        for i, idxes in tqdm(list(enumerate(pred_folds))):
+            trn_idx, val_idx = idxes
+            booster = cv_model.boosters[i]
+
+            # Get and store oof and y_true
+            y_pred = booster.predict(features_df.values[val_idx])
+            y_true = target.values[val_idx]
+            _oofs.append(y_pred)
+            _y_trues.append(y_true)
+        cv_MCC, _ = calc_best_MCC(_y_trues, _oofs, bins=3000)
+        sel_log(f'cv_MCC: {cv_MCC}', logger)
+
+        # Save important info
         oofs = [single_booster.predict(features_df.values)]
         y_trues = [target]
         val_idxes = [features_df.index]
@@ -182,6 +201,7 @@ def train(args, logger):
     # Calc best MCC
     sel_log('calculating the best MCC ...', None)
     best_MCC, best_threshs = calc_best_MCC(y_trues, oofs, bins=3000)
+    sel_log(f'best_threshs: {best_threshs}', logger)
     sel_log(f'best_MCC: {best_MCC}', logger)
 
     # -- Post processings
@@ -291,14 +311,21 @@ def train(args, logger):
         sel_log('loading test data ...', None)
         test_features_df = load_features(
             configs['features'], test_base_dir, logger)
+        if configs['train']['feature_selection']:
+            test_features_df = select_features(test_features_df,
+                                          configs['train']['feature_select_path'],
+                                          configs['train']['feature_select_metric'],
+                                          configs['train']['feature_topk'])
 
         # -- Prediction
         sel_log('predicting for test ...', None)
         preds = []
-        for booster, best_thresh in tqdm(zip(cv_model.boosters, best_threshs)):
+        models = [
+            single_booster] if configs['train']['single_model'] else cv_model.boosters
+        for booster, best_thresh in tqdm(zip(models, best_threshs)):
             pred = booster.predict(test_features_df.values)
-            preds.append(pred * 0.5 / best_thresh)
-            # preds.append(pred > best_thresh)
+            # preds.append(pred * 0.5 / best_thresh)
+            preds.append(pred > best_thresh)
         sub_values = np.mean(preds, axis=0)
         target_values = (sub_values > 0.5).astype(np.int32)
 
